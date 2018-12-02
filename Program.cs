@@ -6,7 +6,11 @@ namespace Advent_of_Code
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            IAdventDay day = new Advent_of_Code_2018.Day1();
+
+            Console.WriteLine($"{day.Name}: {day.Solve()}, {day.SolveAdvanced()}");
+            Console.WriteLine($"Calculated in {stopWatch.ElapsedMilliseconds} ms");
         }
     }
 }
