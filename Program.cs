@@ -7,7 +7,7 @@ namespace Advent_of_Code
         static void Main(string[] args)
         {
             var stopWatch = System.Diagnostics.Stopwatch.StartNew();
-            IAdventDay day = new Advent_of_Code.Year2018.Day5();
+            IAdventDay day = new Advent_of_Code.Year2018.Day6();
 
             Console.WriteLine($"{day.Name}: {day.Solve()}, {day.SolveAdvanced()}");
             Console.WriteLine($"Calculated in {stopWatch.ElapsedMilliseconds} ms");
