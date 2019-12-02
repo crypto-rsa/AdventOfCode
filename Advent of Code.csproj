@@ -6,4 +6,8 @@
     <RootNamespace>Advent_of_Code</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="2019\Resources\" />
+  </ItemGroup>
+
 </Project>
