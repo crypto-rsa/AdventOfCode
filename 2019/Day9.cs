@@ -125,7 +125,7 @@ namespace Advent_of_Code.Year2019
                 };
             }
 
-            long Get(int index) => index <= program.Count ? program[index] : 0;
+            long Get(int index) => index < program.Count ? program[index] : 0;
 
             void Set(int index, long value)
             {
