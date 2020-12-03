@@ -76,6 +76,33 @@ namespace Tools
             return Factorization.OfFactorial( n ) / (Factorization.OfFactorial( k ) * Factorization.OfFactorial( n - k ));
         }
 
+        /// <summary>
+        /// Returns all permutations of numbers 0, ..., <paramref name="N"/> - 1
+        /// </summary>
+        /// <param name="N">The number of items to permute</param>
+        /// <returns>The permutations of the set {0, ..., <paramref name="N"/> - 1}</returns>
+        public static IEnumerable<int[]> GetPermutations(int N)
+        {
+            var factorial = Enumerable.Range(0, N + 1).Select(i => Factorial(i)).ToArray();
+
+            for (int permutation = 0; permutation < factorial[N]; permutation++)
+            {
+                int n = permutation;
+                var items = new int[N];
+
+                for (int j = 0; j < N; j++)
+                {
+                    int d = (int)(n / factorial[N - 1 - j]);
+
+                    items[j] = Enumerable.Range(0, N).Except(items.Take(j)).ElementAt(d);
+
+                    n -= (int)(d * factorial[N - 1 - j]);
+                }
+
+                yield return items;
+            }
+        }
+
         #endregion
     }
 }

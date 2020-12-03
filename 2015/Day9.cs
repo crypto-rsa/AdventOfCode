@@ -30,37 +30,28 @@ namespace Advent_of_Code.Year2015
             var cityNames = distances.Keys.Select(i => i.Item1).Distinct().OrderBy(s => s).Select((s, i) => (i, s)).ToDictionary(i => i.Item1, i => i.Item2);
 
             int cityCount = (int)Math.Ceiling(Math.Sqrt(distances.Count));
-            var factorial = Enumerable.Range(0, cityCount + 1).Select(i => Tools.Combinatorics.Factorial(i)).ToArray();
-
             int bestDistance = worstDistance;
 
-            for (int permutation = 0; permutation < factorial[cityCount]; permutation++)
+            foreach (var permutation in Tools.Combinatorics.GetPermutations(cityCount))
             {
                 int distance = 0;
-                int n = permutation;
-                var cities = Enumerable.Range(0, cityCount).ToList();
-
-                int prevCity = -1;
+                int prevCity = 0;
 
                 for (int j = 0; j < cityCount; j++)
                 {
-                    int d = (int)(n / factorial[cityCount - 1 - j]);
                     var city = -1;
 
                     if (j == 0)
                     {
-                        prevCity = cities[d];
+                        prevCity = permutation[j];
                     }
                     else
                     {
-                        city = cities[d];
+                        city = permutation[j];
 
                         distance += distances[(cityNames[prevCity], cityNames[city])];
                         prevCity = city;
                     }
-
-                    n -= (int)(d * factorial[cityCount - 1 - j]);
-                    cities.RemoveAt(d);
                 }
 
                 bestDistance = distanceDelegate(bestDistance, distance);
