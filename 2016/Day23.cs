@@ -10,6 +10,65 @@ namespace Advent_of_Code.Year2016
         public string Name => "23. 12. 2016";
 
         private static string[][] GetInput() => File.ReadAllLines("2016/Resources/day23.txt").Select(s => s.Split(' ')).ToArray();
+        
+        private class LoopDetector
+        {
+            private readonly string[][] _instructions;
+
+            private readonly Dictionary<string, int> _registers;
+
+            public LoopDetector(string[][] instructions, Dictionary<string, int> registers)
+            {
+                _instructions = instructions;
+                _registers = registers;
+            }
+
+            private bool CanBeRewritten(int ip, string register) => _instructions[ip][0] switch
+            {
+                "inc" or "dec" => _instructions[ip][1] != register,
+                _ => false,
+            };
+
+            private bool IsLoop(int ip)
+            {
+                if (_instructions[ip][0] != "jnz")
+                    return false;
+
+                string counter = _instructions[ip][1];
+
+                if (!_registers.ContainsKey(counter))
+                    return false;
+
+                int counterValue = _registers[counter];
+
+                if (counterValue == 0)
+                    return false;
+
+                int jump = GetValue(_registers, _instructions[ip][2]);
+                if ( jump >= 0)
+                    return false;
+
+                var loopBody = _instructions[(ip - jump)..ip];
+
+                int counterChange = loopBody.Sum(i => i[0] switch
+                {
+                    "inc" when i[1] == counter => +1,
+                    "dec" when i[1] == counter => -1,
+                    _ => 0,
+                });
+                
+                if (counterValue * counterChange >= 0)
+                    return false;
+
+                if (counterValue % counterChange != 0)
+                    return false;
+
+                if (loopBody.Any(i => i[0] is not ("inc" or "dec" or "add" or "mul")))
+                    return false;
+
+                return Enumerable.Range(ip - jump, jump).All(i => CanBeRewritten(i, counter));
+            }
+        }
 
         private class LoopInfo
         {
@@ -55,26 +114,19 @@ namespace Advent_of_Code.Year2016
 
             List<(string Name, int Index)> log = new();
 
-            var toggled = new Dictionary<int, string>();
-
             while (ip < instructions.Length)
             {
                 var instruction = instructions[ip];
 
-                if (!toggled.TryGetValue(ip, out var instructionName))
-                {
-                    instructionName = instruction[0];
-                }
-
                 // log.Add((instructionName, ip));
 
-                switch (instructionName)
+                switch (instruction[0])
                 {
                     case "cpy":
                         if (!registers.ContainsKey(instruction[2]))
                             break;
 
-                        registers[instruction[2]] = GetValue(instruction[1]);
+                        registers[instruction[2]] = GetValue(registers, instruction[1]);
                         break;
 
                     case "inc":
@@ -86,35 +138,28 @@ namespace Advent_of_Code.Year2016
                         break;
 
                     case "jnz":
-                        if (GetValue(instruction[1]) != 0)
+                        if (GetValue(registers, instruction[1]) != 0)
                         {
-                            ip += GetValue(instruction[2]);
+                            ip += GetValue(registers, instruction[2]);
                             continue;
                         }
                         break;
 
                     case "tgl":
-                        int location = ip + GetValue(instruction[1]);
+                        int location = ip + GetValue(registers, instruction[1]);
 
                         if (location < 0 || location >= instructions.Length)
                             break;
 
-                        if (toggled.ContainsKey(location))
+                        instructions[location][0] = instructions[location][0] switch
                         {
-                            toggled.Remove(location);
-                        }
-                        else
-                        {
-                            toggled[location] = instructions[location][0] switch
-                            {
-                                "cpy" => "jnz",
-                                "inc" => "dec",
-                                "dec" => "inc",
-                                "jnz" => "cpy",
-                                "tgl" => "inc",
-                                _ => throw new InvalidOperationException(),
-                            };
-                        }
+                            "cpy" => "jnz",
+                            "inc" => "dec",
+                            "dec" => "inc",
+                            "jnz" => "cpy",
+                            "tgl" => "inc",
+                            _ => throw new InvalidOperationException(),
+                        };
                         break;
                 }
 
@@ -122,9 +167,9 @@ namespace Advent_of_Code.Year2016
             }
 
             return registers["a"].ToString();
-
-            int GetValue(string s) => registers.TryGetValue(s, out int value) ? value : int.Parse(s);
         }
+        
+        private static int GetValue(Dictionary<string, int> registers, string s) => registers.TryGetValue(s, out int value) ? value : int.Parse(s);
 
         public string Solve() => Process(7);
 

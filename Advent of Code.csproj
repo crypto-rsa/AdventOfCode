@@ -10,4 +10,10 @@
     <Folder Include="2019\Resources\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="2017\Day19.cs" />
+    <Compile Remove="2017\Day17.cs" />
+    <Compile Remove="2017\Day18.cs" />
+  </ItemGroup>
+
 </Project>
