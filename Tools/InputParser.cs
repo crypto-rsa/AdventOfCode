@@ -12,6 +12,13 @@ public static class InputParser
     #region Methods
 
     /// <summary>
+    /// Splits the input string to individual lines
+    /// </summary>
+    /// <param name="input">The input to split</param>
+    /// <returns>A collection of strings representing the individual lines</returns>
+    public static IEnumerable<string> SplitToLines(this string input) => input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+
+    /// <summary>
     /// Returns a collection of strings from the original input separated by a blank line
     /// </summary>
     /// <param name="input">The input to parse</param>
