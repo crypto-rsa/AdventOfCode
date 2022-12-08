@@ -34,5 +34,17 @@ public static class InputParser
     /// <returns>A collection of integers parsed from the input lines</returns>
     public static IEnumerable<int> ParseIntegers(this IEnumerable<string> lines) => lines.Select(int.Parse);
 
+    /// <summary>
+    /// Parses the input to a grid (array of arrays) of elements
+    /// </summary>
+    /// <param name="input">The input to parse</param>
+    /// <param name="parser">The parser method</param>
+    /// <typeparam name="T">The type of elements in the resulting grid</typeparam>
+    /// <returns>An array of arrays of parsed elements representing the grid</returns>
+    public static T[][] ParseAsGrid<T>(this string input, Func<char, T> parser) => input
+        .SplitToLines()
+        .Select(s => s.Select(parser).ToArray())
+        .ToArray();
+
     #endregion
 }
