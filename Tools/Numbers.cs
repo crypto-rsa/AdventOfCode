@@ -73,6 +73,10 @@ namespace Tools
             _ => Array.Empty<double>(),
         };
 
+        public static long GreatestCommonDivisor(long a, long b) => Combinatorics.GCD(Math.Abs(a), Math.Abs(b)).ToNumber();
+
+        public static long LeastCommonMultiple(long a, long b) => Combinatorics.LCM(Math.Abs(a), Math.Abs(b)).ToNumber();
+
         #endregion
     }
 }
