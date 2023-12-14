@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Tools
 {
@@ -76,6 +77,64 @@ namespace Tools
         public static long GreatestCommonDivisor(long a, long b) => Combinatorics.GCD(Math.Abs(a), Math.Abs(b)).ToNumber();
 
         public static long LeastCommonMultiple(long a, long b) => Combinatorics.LCM(Math.Abs(a), Math.Abs(b)).ToNumber();
+
+        public static long SolveCongruences((long Mod, long Rem)[] congruences)
+        {
+            long gcd = Combinatorics.GCD(congruences.Select(c => c.Mod).ToArray()).ToNumber();
+
+            if (gcd == 1)
+                return SolveCoprime(congruences);
+
+            if (congruences.Select(c => c.Rem % gcd).Distinct().Count() > 1)
+                throw new InvalidOperationException($"The remainders are not congruent modulo {gcd} (= the GCD of the moduli)!");
+
+            var factorizations = congruences.Select(c => Factorization.Of(c.Mod)).ToArray();
+            var primes = factorizations.SelectMany(f => f.Factors.Select(i => i.Prime)).Distinct().ToArray();
+
+            var subResults = primes.Select(GetPrimePowerSolution).ToArray();
+
+            if (subResults.Any(i => i.Mod == 0))
+                throw new InvalidOperationException("No solution exists!");
+
+            return SolveCoprime(subResults);
+
+            (long Mod, long Rem) GetPrimePowerSolution(long prime)
+            {
+                var candidates = factorizations
+                    .Select((f, i) => (Mod: f.GetPrimeFactor(prime).ToNumber(), congruences[i].Rem))
+                    .Where(i => i.Mod > 1)
+                    .ToArray();
+
+                long minPower = candidates.Min(i => i.Mod);
+
+                if (candidates.Select(c => c.Rem % minPower).Distinct().Count() > 1)
+                    return (0, 0);
+
+                return candidates.MaxBy(i => i.Mod);
+            }
+
+            static long SolveCoprime((long Mod, long Rem)[] congruences)
+            {
+                long lcm = congruences.Aggregate(1L, (cur, next) => cur * next.Mod);
+                var m = congruences.Select(i => lcm / i.Mod).ToArray();
+                var inverse = new long[m.Length];
+
+                for (int i = 0; i < m.Length; i++)
+                {
+                    for (int j = 1; j < congruences[i].Mod; j++)
+                    {
+                        if (m[i] * j % congruences[i].Mod == 1)
+                        {
+                            inverse[i] = j;
+
+                            break;
+                        }
+                    }
+                }
+
+                return congruences.Select((c, i) => inverse[i] * c.Rem * m[i]).Sum() % lcm;
+            }
+        }
 
         #endregion
     }

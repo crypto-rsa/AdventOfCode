@@ -162,6 +162,8 @@ namespace Tools
             return exponent;
         }
 
+        public Factorization GetPrimeFactor(long prime) => new( Enumerable.Repeat((prime, GetExponent(prime)), 1) );
+
         /// <summary>
         /// Returns a collection of factorizations of the divisors of the current number
         /// </summary>
