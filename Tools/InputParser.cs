@@ -35,6 +35,15 @@ public static class InputParser
     public static IEnumerable<int> ParseIntegers(this IEnumerable<string> lines) => lines.Select(int.Parse);
 
     /// <summary>
+    /// Parses integers from individual lines
+    /// </summary>
+    /// <param name="lines">The lines to parse</param>
+    /// <param name="separator">The separator between the integers</param>
+    /// <returns>A collection of integers parsed from the input lines</returns>
+    public static IEnumerable<IEnumerable<int>> ParseIntegerSequences(this IEnumerable<string> lines, string separator = " ") => lines
+        .Select(s => s.Split(separator, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse));
+
+    /// <summary>
     /// Parses the input to a grid (array of arrays) of elements
     /// </summary>
     /// <param name="input">The input to parse</param>
