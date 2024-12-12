@@ -35,6 +35,8 @@ public class Grid<T> : IEnumerable<GridPosition>
 
     public static Grid<int> ParseAsIntegers(string input) => new( input.ParseAsGrid(c => int.Parse(c.ToString())) );
 
+    public static Grid<char> ParseAsCharacters(string input) => new( input.ParseAsGrid(c => c) );
+
     public bool IsValid(GridPosition position) => position.Row >= 0 && position.Row < Height && position.Column >= 0 && position.Column < Width;
 
     public IEnumerable<GridPosition> FindAll(T value)
