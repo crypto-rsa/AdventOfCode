@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tools;
 
-public class Grid<T>
+public class Grid<T> : IEnumerable<GridPosition>
 {
     #region Fields
 
@@ -73,6 +74,23 @@ public class Grid<T>
         yield return (-1, +1);
         yield return (+1, -1);
         yield return (+1, +1);
+    }
+
+    #endregion
+
+    #region IEnumerable<GridPosition>
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public IEnumerator<GridPosition> GetEnumerator()
+    {
+        for (var row = 0; row < Height; row++)
+        {
+            for (var column = 0; column < Width; column++)
+            {
+                yield return new GridPosition(row, column);
+            }
+        }
     }
 
     #endregion
