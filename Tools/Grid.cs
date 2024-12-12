@@ -98,4 +98,17 @@ public class Grid<T> : IEnumerable<GridPosition>
     #endregion
 }
 
-public record GridPosition(int Row, int Column);
+public record GridPosition(int Row, int Column)
+{
+    #region Properties
+
+    public GridPosition Above => this with { Row = Row - 1 };
+
+    public GridPosition Below => this with { Row = Row + 1 };
+
+    public GridPosition Left => this with { Column = Column - 1 };
+
+    public GridPosition Right => this with { Column = Column + 1 };
+
+    #endregion
+}
