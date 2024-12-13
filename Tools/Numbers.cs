@@ -136,6 +136,39 @@ namespace Tools
             }
         }
 
+        public static (long X, long Y, long GCD) ExtendedEuclideanAlgorithm(long a, long b)
+        {
+            (long rr, long r) = (a, b);
+            (long ss, long s) = (1L, 0L);
+            (long tt, long t) = (0L, 1L);
+
+            while (r != 0)
+            {
+                long q = rr / r;
+                (rr, r) = (r, rr - q * r);
+                (ss, s) = (s, ss - q * s);
+                (tt, t) = (t, tt - q * t);
+            }
+
+            return (ss, tt, rr);
+        }
+
+        public static (long X, long Y)? SolvePairOfLinearEquations(long a1, long b1, long c1, long a2, long b2, long c2)
+        {
+            long det = a1 * b2 - a2 * b1;
+
+            if (det == 0)
+                return null;
+
+            long detX = c1 * b2 - c2 * b1;
+            long detY = a1 * c2 - a2 * c1;
+
+            if(detX % det != 0 || detY % det != 0)
+                return null;
+
+            return (detX / det, detY / det);
+        }
+
         #endregion
     }
 }
