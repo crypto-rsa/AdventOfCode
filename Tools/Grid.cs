@@ -4,19 +4,19 @@ using System.Linq;
 
 namespace Tools;
 
-public class Grid<T> : IEnumerable<GridPosition>
+public class Grid<T>(T[][] grid) : IEnumerable<GridPosition>
 {
     #region Fields
 
-    private readonly T[][] _grid;
+    private readonly T[][] _grid = grid;
 
     #endregion
 
     #region Constructors
 
-    private Grid(T[][] grid)
+    public Grid(Grid<T> source)
+        : this(source._grid.Select(row => row.ToArray()).ToArray())
     {
-        _grid = grid;
     }
 
     #endregion
@@ -27,7 +27,11 @@ public class Grid<T> : IEnumerable<GridPosition>
 
     public int Width => _grid[0].Length;
 
-    public T this[GridPosition position] => _grid[position.Row][position.Column];
+    public T this[GridPosition position]
+    {
+        get => _grid[position.Row][position.Column];
+        set => _grid[position.Row][position.Column] = value;
+    }
 
     #endregion
 
@@ -76,6 +80,8 @@ public class Grid<T> : IEnumerable<GridPosition>
         }
     }
 
+    public override string ToString() => string.Join(System.Environment.NewLine, _grid.Select(row => string.Join(string.Empty, row)));
+
     #endregion
 
     #region IEnumerable<GridPosition>
@@ -107,6 +113,12 @@ public record GridPosition(int Row, int Column)
     public GridPosition Left => this with { Column = Column - 1 };
 
     public GridPosition Right => this with { Column = Column + 1 };
+
+    #endregion
+
+    #region Operators
+
+    public static GridPosition operator +(GridPosition a, GridPosition b) => new(a.Row + b.Row, a.Column + b.Column);
 
     #endregion
 }
