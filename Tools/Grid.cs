@@ -82,6 +82,14 @@ public class Grid<T>(T[][] grid) : IEnumerable<GridPosition>
 
     public override string ToString() => string.Join(System.Environment.NewLine, _grid.Select(row => string.Join(string.Empty, row)));
 
+    public static GridPosition GetOffset(char instruction) => instruction switch
+    {
+        '<' => new GridPosition(0, -1),
+        '^' => new GridPosition(-1, 0),
+        '>' => new GridPosition(0, +1),
+        'v' => new GridPosition(+1, 0),
+    };
+
     #endregion
 
     #region IEnumerable<GridPosition>
@@ -116,6 +124,11 @@ public record GridPosition(int Row, int Column)
 
     #endregion
 
+    #region Methods
+
+    public int DistanceTo(GridPosition other) => System.Math.Abs(Row - other.Row) + System.Math.Abs(Column - other.Column);
+
+    #endregion
     #region Operators
 
     public static GridPosition operator +(GridPosition a, GridPosition b) => new(a.Row + b.Row, a.Column + b.Column);
