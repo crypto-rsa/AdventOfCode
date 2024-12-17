@@ -84,6 +84,15 @@ public class Grid<T>(T[][] grid) : IEnumerable<GridPosition>
 
     public override string ToString() => string.Join(System.Environment.NewLine, _grid.Select(row => string.Join(string.Empty, row)));
 
+    public static GridPosition GetOffset(char instruction) => instruction switch
+    {
+        '<' => new GridPosition(0, -1),
+        '^' => new GridPosition(-1, 0),
+        '>' => new GridPosition(0, +1),
+        'v' => new GridPosition(+1, 0),
+        _ => throw new System.ArgumentException($"Invalid instruction: {instruction}", nameof( instruction ))
+    };
+
     #endregion
 
     #region IEnumerable<GridPosition>
@@ -121,6 +130,12 @@ public record GridPosition(int Row, int Column)
     #region Overrides
 
     public override string ToString() => $"({Row}, {Column})";
+
+    #endregion
+
+    #region Methods
+
+    public int DistanceTo(GridPosition other) => System.Math.Abs(Row - other.Row) + System.Math.Abs(Column - other.Column);
 
     #endregion
 
