@@ -33,6 +33,10 @@ public class Grid<T>(T[][] grid) : IEnumerable<GridPosition>
         set => _grid[position.Row][position.Column] = value;
     }
 
+    public GridPosition TopLeft => new( 0, 0 );
+
+    public GridPosition BottomRight => new( Height - 1, Width - 1 );
+
     #endregion
 
     #region Methods
