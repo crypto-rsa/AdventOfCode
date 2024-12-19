@@ -94,6 +94,13 @@ public class Grid<T>(T[][] grid) : IEnumerable<GridPosition>
         'v' => new GridPosition(+1, 0),
     };
 
+    public static Grid<char> Create(int height, int width, char defaultValue)
+    {
+        var array = Enumerable.Range(0, height).Select(_ => Enumerable.Repeat(defaultValue, width).ToArray()).ToArray();
+
+        return new Grid<char>(array);
+    }
+
     #endregion
 
     #region IEnumerable<GridPosition>
