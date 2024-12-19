@@ -104,6 +104,34 @@ public class Grid<T>(T[][] grid) : IEnumerable<GridPosition>
         return new Grid<char>(array);
     }
 
+    public int FindPathLength(GridPosition start, GridPosition end, char pathCharacter)
+    {
+        var heap = new Heap<GridPosition>();
+        var steps = new Dictionary<GridPosition, int> { [start] = 0 };
+
+        heap.Push(start, start.DistanceTo(end));
+
+        while (heap.Count > 0)
+        {
+            var position = heap.Pop();
+            int currentSteps = steps[position];
+
+            if (position == end)
+                return currentSteps;
+
+            foreach (var neighbour in GetNeighbours(position, includeDiagonals: false).Where(p => Equals(this[p], pathCharacter)))
+            {
+                if (!steps.TryGetValue(neighbour, out var fewestSteps) || currentSteps + 1 < fewestSteps)
+                {
+                    steps[neighbour] = currentSteps + 1;
+                    heap.Push(neighbour, neighbour.DistanceTo(end) + currentSteps + 1);
+                }
+            }
+        }
+
+        return -1;
+    }
+
     #endregion
 
     #region IEnumerable<GridPosition>
