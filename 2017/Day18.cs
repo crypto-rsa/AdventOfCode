@@ -176,9 +176,11 @@ namespace Advent_of_Code.Year2017
 
         public string Name => "18. 12. 2017";
 
+        private static string GetInput() => System.IO.File.ReadAllText("2017/Resources/day18.txt");
+
         public string Solve()
         {
-            var lines = input.Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ).Select( s => s.Trim().Split( ' ' ) ).ToList();
+            var lines = GetInput().Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ).Select( s => s.Trim().Split( ' ' ) ).ToList();
 
             var program = new SoundProgram( 0, lines );
 
@@ -192,7 +194,7 @@ namespace Advent_of_Code.Year2017
 
         public string SolveAdvanced()
         {
-            var lines = input.Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ).Select( s => s.Trim().Split( ' ' ) ).ToList();
+            var lines = GetInput().Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries ).Select( s => s.Trim().Split( ' ' ) ).ToList();
             var programs = Enumerable.Range( 0, 2 ).Select( i => new DuetProgram( i, lines ) ).ToArray();
 
             while( !(programs[0].State == State.Terminated && programs[1].State == State.Terminated) &&

@@ -40,8 +40,6 @@ namespace Advent_of_Code.Year2017
                 End = end;
             }
 
-            public string Name => $"{Start}-{End}";
-
             public Point Start { get; }
             public Point End { get; }
             public string Name { get; set; } = string.Empty;
@@ -49,9 +47,11 @@ namespace Advent_of_Code.Year2017
 
         public string Name => "19. 12. 2017";
 
+        private static string GetInput() => System.IO.File.ReadAllText("2017/Resources/day19.txt");
+
         public string Solve()
         {
-            var lines = input.Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+            var lines = GetInput().Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
 
             var path = CreatePath( lines );
 
@@ -193,7 +193,7 @@ namespace Advent_of_Code.Year2017
 
         public string SolveAdvanced()
         {
-            var lines = input.Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
+            var lines = GetInput().Split( new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
             var path = CreatePath( lines );
 
             var startPoint = path.Keys.Single( p => p.Row == 0 );

@@ -10,7 +10,7 @@ namespace Advent_of_Code.Year2017
 
         public string Solve()
         {
-            int steps = int.Parse( input );
+            int steps = int.Parse( Input );
             var list = new List<int>( steps + 1 ) { 0 };
             int curPosition = 0;
 
@@ -25,7 +25,7 @@ namespace Advent_of_Code.Year2017
 
         public string SolveAdvanced()
         {
-            int steps = int.Parse( input );
+            int steps = int.Parse( Input );
             int curPosition = 0;
             int zeroPosition = 0;
             int next = 1;
